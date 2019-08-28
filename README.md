@@ -84,6 +84,39 @@ sig_fft1_half = sig_fft1(1:Nr/2);
 
 ![](./screenshots/fft1_pos_20_vel_5.jpg)
 
+### Range and Doppler FFT (2D FFT)
+
+```
+%% RANGE DOPPLER RESPONSE
+
+% Range Doppler Map Generation.
+
+% The output of the 2D FFT is an image that has reponse in the range and
+% doppler FFT bins. So, it is important to convert the axis from bin sizes
+% to range and doppler based on their Max values.
+
+Mix=reshape(Mix,[Nr,Nd]);
+
+% 2D FFT using the FFT size for both dimensions.
+sig_fft2 = fft2(Mix,Nr,Nd);
+
+% Taking just one side of signal from Range dimension.
+sig_fft2 = sig_fft2(1:Nr/2,1:Nd);
+sig_fft2 = fftshift (sig_fft2);
+RDM = abs(sig_fft2);
+RDM = pow2db(RDM) ;
+
+%use the surf function to plot the output of 2DFFT and to show axis in both
+%dimensions
+doppler_lim = [-100, 100];
+range_lim = [-200, 200];
+doppler_axis = linspace(doppler_lim(1),doppler_lim(2),Nd);
+range_axis = linspace(range_lim(1),range_lim(2),Nr/2)*((Nr/2)/(range_lim(2)-range_lim(1)));
+figure,surf(doppler_axis,range_axis,RDM);
+```
+
+![](./screenshots/fft2_pos_20_vel_5.jpg)
+
 ### 2D CFAR
 
 Implement the 2D CFAR process on the output of 2D FFT operation, i.e the Range Doppler Map.
